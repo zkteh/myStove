@@ -6,9 +6,9 @@ FYP
 2. alert user to go back to the cooking region with the help of PIR motion sensor
 
 # Limitation
-pan tempearture is impossible due to low sensitivity of the OEM brand MLX90614 sensor 
-
-food temperature is not accurate due to same reason as above
-only works for one pan
+1. pan tempearture is impossible due to low sensitivity of the OEM brand MLX90614 sensor 
+2. food temperature is not accurate due to same reason as above
+3. only works for one pan
+4. user is not allowed to cover the pan with lid
 
 ...
