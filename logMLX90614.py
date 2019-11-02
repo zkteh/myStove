@@ -4,22 +4,31 @@ import busio as io
 import adafruit_mlx90614
 import time
 import random 
+from w1thermsensor import W1ThermSensor
 
 
 dbname='sensorsData.db'
-sampleFreq = 1*60 # time in seconds ==> Sample each 1 min
+sampleFreq = 1 # time in seconds ==> Sample each 1 min
 
 # get data from DHT sensor
-def getMLXdata():	
+def getMLXdata():
+    #mlx90614 calling function	
     i2c = io.I2C(board.SCL, board.SDA, frequency=100000)
     mlx = adafruit_mlx90614.MLX90614(i2c)
+
+    #ds18b20 calling function
+    ds18b20_sensor = W1ThermSensor()
+    ds18b20_object = ds18b20_sensor.get_temperature()
             
-    if mlx is not None:
-        ds18b20 = round(random.uniform(25.0, 35.0), 2)   #randome for DS18B20 for graph purpose 
+    if mlx and ds18b20_object is not None:     
+        #ds18b20       
+        ds18b20_object = round(ds18b20_object, 2)
+        #mlx90614s
         mlx_ambient = round(mlx.ambient_temperature, 2)
         mlx_object = round(mlx.object_temperature, 2)    
-        logData (ds18b20, mlx_ambient, mlx_object)
-        return ds18b20, mlx_ambient, mlx_object
+        #logData
+        logData (ds18b20_object, mlx_ambient, mlx_object)
+        return ds18b20_object, mlx_ambient, mlx_object
     
 # log sensor data on database
 def logData (ds18b20, mlx_ambient, mlx_object):
@@ -32,7 +41,8 @@ def logData (ds18b20, mlx_ambient, mlx_object):
 # main function
 def main():
 	while True:
-            ds18b20, mlx_ambient, mlx_object = getMLXdata()
+            #print (getMLXdata())            
+            ds18b20, mlx_ambient, mlx_object = getMLXdata()          
             logData (ds18b20, mlx_ambient, mlx_object)
             time.sleep(sampleFreq)
             
