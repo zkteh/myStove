@@ -5,10 +5,11 @@ import adafruit_mlx90614
 import time
 import random 
 from w1thermsensor import W1ThermSensor
+from datetime import datetime
 
 
 dbname='sensorsData.db'
-sampleFreq = 1 # time in seconds ==> Sample each 1 min
+#sampleFreq = 1 # time in seconds ==> Sample each 1 min
 
 # get data from DHT sensor
 def getMLXdata():
@@ -30,21 +31,29 @@ def getMLXdata():
         logData (ds18b20_object, mlx_ambient, mlx_object)
         return ds18b20_object, mlx_ambient, mlx_object
     
+
+
 # log sensor data on database
 def logData (ds18b20, mlx_ambient, mlx_object):
+
+    #put DB outside of loop to fix some data not able to insert due to deadlock
+    #ref:https://stackoverflow.com/questions/33576296/insert-data-to-mysql-table-every-second-one-time-per-second
     conn=sqlite3.connect(dbname)
     curs=conn.cursor()
-    curs.execute("INSERT INTO MLX_data VALUES(datetime('now'), ?, ?, ?)",(ds18b20, mlx_ambient, mlx_object))
-    conn.commit()
+
+    while True:
+        curs.execute("INSERT INTO MLX_data VALUES(datetime('now'), ?, ?, ?)",(ds18b20, mlx_ambient, mlx_object))
+        conn.commit()
+        print (str(datetime.now()),"   Data committed: ", "ds18b20: " , ds18b20, "   mlx_ambient: " , mlx_ambient, "   mlx_object: " , mlx_object)
+        time.sleep(1)
+
     conn.close()
 
 # main function
 def main():
-	while True:
-            #print (getMLXdata())            
+	while True:                         
             ds18b20, mlx_ambient, mlx_object = getMLXdata()          
             logData (ds18b20, mlx_ambient, mlx_object)
-            time.sleep(sampleFreq)
-            
+                       
 # ------------ Execute program 
 main()
