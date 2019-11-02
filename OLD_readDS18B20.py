@@ -1,7 +1,7 @@
-#
-#
-# 
+# OLD
 # https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing/software
+# NEW (Get the temperature from your w1 therm sensor in a single line of code!)
+# https://github.com/timofurrer/w1thermsensor
 
 
 # Import Libraries
