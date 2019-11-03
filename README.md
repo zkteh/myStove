@@ -1,5 +1,5 @@
 # myStove
-FYP
+WOU-FYP
 
 # This IoT will 
 1. monitor the food temperature to know whether the stove is warming, cooling, heating or off.
@@ -11,4 +11,5 @@ FYP
 3. only works for one pan
 4. user is not allowed to cover the pan with lid
 
-...
+# Things I learnt
+1. Python doesn't like inconsitently mixed tabs and spaces for indentation, use VScode to convert indentation into tabs/spaces
