@@ -1,5 +1,6 @@
 # myStove
 WOU-FYP
+zkteh.ddns.net:55555
 
 # This IoT will 
 1. monitor the food temperature to know whether the stove is warming, cooling, heating or off.
