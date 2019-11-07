@@ -31,19 +31,19 @@
             data: {
                 labels: [],
                 datasets: [{
-                    label: "Random Dataset",
+                    label: "ds18b20",
                     backgroundColor: 'rgb(255, 99, 132)',
                     borderColor: 'rgb(255, 99, 132)',
                     data: [],
                     fill: false,
                 }, {
-                    label: "Random Dataset2",
+                    label: "mlx_ambient",
                     backgroundColor: 'rgb(97, 171, 64)',
                     borderColor: 'rgb(97, 171, 64)',
                     data: [],
                     fill: false,
                 }, {
-                    label: "Random Dataset3",
+                    label: "mlx_object",
                     backgroundColor: 'rgb(0, 168, 255)',
                     borderColor: 'rgb(0, 168, 255)',
                     data: [],
@@ -86,31 +86,32 @@
         const context = document.getElementById('canvas').getContext('2d');
         const lineChart = new Chart(context, config);
                             
-            if (config.data.labels.length === 20) {
-                config.data.labels.shift();
-                config.data.datasets[0].data.shift();
-                config.data.datasets[1].data.shift();
-                config.data.datasets[2].data.shift();
-            }
-
         var jsonurl = "/data";
         function fetchdata(){
             $.getJSON(jsonurl, function (data) {            
-                i = 0;
-                i++;                    
+               for (var i=0; i < data.length; i++){                 
+                //shift the old data to make the graph nicer
+                if (config.data.labels.length === 120) {    
+                    config.data.labels.shift();
+                    config.data.datasets[0].data.shift();
+                    config.data.datasets[1].data.shift();
+                    config.data.datasets[2].data.shift();
+                }
+                //insert data to graph   
                 config.data.labels.push(data[i]['timestamp']);
                 config.data.datasets[0].data.push(data[i]['ds18b20']);
                 config.data.datasets[1].data.push(data[i]['mlx_ambient']);
                 config.data.datasets[2].data.push(data[i]['mlx_object']);
                 lineChart.update();
-             }); //end of getJSon
-         }//end of fetchdata
-
+               }//end of for loop()                               
+            }); //end of $.getJSON()
+         }//end of fetchdata()
+        
         $(document).ready(function(){
            setInterval(fetchdata,1000);
         });
-
-    }); //end of ready fcuntion
+       
+    }); //end of ready()
     
 </script>
 </body>
