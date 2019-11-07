@@ -14,4 +14,5 @@ http://zkteh.ddns.net:55555
 
 # Things I learnt
 1. Python doesn't like inconsitently mixed tabs and spaces for indentation, use VScode to convert indentation into tabs/spaces
+https://blender.stackexchange.com/questions/44364/how-to-prevent-indentation-errors
 2. ps -aux , kill -9 <PID>
