@@ -1,16 +1,117 @@
 <!DOCTYPE html>
-   <head>
-      <title>DHT Sensor data </title>
-      <link rel="stylesheet" href='../static/style.css'/>
-   </head>
-   <body>
-	<h1>DHT Sensor Data </h1>
-	<h3> DS18B20_object   ==>  {{ ds_temp  }} oC</h3>
-    <h3> mlx_ambient  ==>  {{ mlx_amb  }} oC</h3>
-    <h3> mlx_object  ==>  {{ mlx_obj  }} oC</h3>
-	<hr>
-	<h3> Last Sensors Reading: {{ time }} ==> <a href="/"class="button">REFRESH</a></h3>	
-	<hr>
-	<p> @2019 For Educational Purpose Only - FYP</p>
-   </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Creating Real-Time Charts with Flask</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="canvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--suppress JSUnresolvedLibraryURL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<!--suppress JSUnresolvedLibraryURL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!--suppress JSUnresolvedLibraryURL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const config = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "Random Dataset",
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [],
+                    fill: false,
+                }, {
+                    label: "Random Dataset2",
+                    backgroundColor: 'rgb(97, 171, 64)',
+                    borderColor: 'rgb(97, 171, 64)',
+                    data: [],
+                    fill: false,
+                }, {
+                    label: "Random Dataset3",
+                    backgroundColor: 'rgb(0, 168, 255)',
+                    borderColor: 'rgb(0, 168, 255)',
+                    data: [],
+                    fill: false,
+                }],
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Creating Real-Time Charts with Flask'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Time'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Value'
+                        }
+                    }]
+                }
+            }
+        };
+            
+        const context = document.getElementById('canvas').getContext('2d');
+        const lineChart = new Chart(context, config);
+                            
+            if (config.data.labels.length === 20) {
+                config.data.labels.shift();
+                config.data.datasets[0].data.shift();
+                config.data.datasets[1].data.shift();
+                config.data.datasets[2].data.shift();
+            }
+
+        var jsonurl = "/data";
+        function fetchdata(){
+            $.getJSON(jsonurl, function (data) {            
+                i = 0;
+                i++;                    
+                config.data.labels.push(data[i]['timestamp']);
+                config.data.datasets[0].data.push(data[i]['ds18b20']);
+                config.data.datasets[1].data.push(data[i]['mlx_ambient']);
+                config.data.datasets[2].data.push(data[i]['mlx_object']);
+                lineChart.update();
+             }); //end of getJSon
+         }//end of fetchdata
+
+        $(document).ready(function(){
+           setInterval(fetchdata,1000);
+        });
+
+    }); //end of ready fcuntion
+    
+</script>
+</body>
 </html>
