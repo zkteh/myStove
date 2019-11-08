@@ -42,3 +42,6 @@ Total Cost                                                              **RM200.
 1. Python doesn't like inconsitently mixed tabs and spaces for indentation, use VScode to convert indentation into tabs/spaces
 https://blender.stackexchange.com/questions/44364/how-to-prevent-indentation-errors
 2. ps -aux , kill -9 <PID>
+  
+# TO-DO
+1. cope with sensor disconnnection (what to do with the data missing part)
