@@ -18,14 +18,34 @@
         </div>
     </div>
 </div>
+
+<p>ds18b20: <span id="ds18b20"></span></p>
+<p>mlx_ambient: <span id="mlx_ambient"></span></p>
+<p>mlx_object: <span id="mlx_object"></span></p>
+<p>mlx_object_avg_over1min: <span id="mlx_object_avg"></span></p>
+
 <!--suppress JSUnresolvedLibraryURL -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <!--suppress JSUnresolvedLibraryURL -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <!--suppress JSUnresolvedLibraryURL -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+
+
 <script>
     $(document).ready(function () {
+        var socket = io.connect('http://192.168.1.56:55555');
+
+        socket.on('connect', function(){
+            socket.send('Users has conncted')
+            console.log('Users has conncted');
+        });
+        
+        socket.on('my_response', namespace='/test', function(msg) {
+            document.getElementById("mlx_object_avg").textContent = msg;
+    });
         const config = {
             type: 'line',
             data: {
@@ -85,13 +105,14 @@
             
         const context = document.getElementById('canvas').getContext('2d');
         const lineChart = new Chart(context, config);
+
                             
         var jsonurl = "/data";
         function fetchdata(){
             $.getJSON(jsonurl, function (data) {            
                for (var i=0; i < data.length; i++){                 
                 //shift the old data to make the graph nicer
-                if (config.data.labels.length === 120) {    
+                if (config.data.labels.length === 60) {    
                     config.data.labels.shift();
                     config.data.datasets[0].data.shift();
                     config.data.datasets[1].data.shift();
@@ -103,14 +124,21 @@
                 config.data.datasets[1].data.push(data[i]['mlx_ambient']);
                 config.data.datasets[2].data.push(data[i]['mlx_object']);
                 lineChart.update();
+
+                //update current value on web
+                document.getElementById("ds18b20").textContent = data[i]['ds18b20'];
+                document.getElementById("mlx_ambient").textContent = data[i]['mlx_ambient'];
+                document.getElementById("mlx_object").textContent = data[i]['mlx_object'];
+
+                       
                }//end of for loop()                               
             }); //end of $.getJSON()
          }//end of fetchdata()
         
         $(document).ready(function(){
            setInterval(fetchdata,1000);
-        });
-       
+        });    
+                       
     }); //end of ready()
     
 </script>
