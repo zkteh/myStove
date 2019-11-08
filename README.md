@@ -17,13 +17,20 @@ http://zkteh.ddns.net:55555
 
 
 # Hardware 
-1. Non Contact Infrared Thermometer MLX90614 Breakout Board – GY-906  **RM24.90**
-2. Low Cost PIR sensor Module                                         **RM5.00**
-[Buy Link!] (https://my.cytron.io/p-low-cost-pir-sensor-module?search=pir%20motion&description=1&src=search.list)                                     **RM5.00**
+1. Non Contact Infrared Thermometer MLX90614 Breakout Board – GY-906    **RM24.90**
+https://shopee.com.my/GY-906-MLX90614-MLX90614ESF-Non-Contact-Infrared-Temperature-Sensor-Module-i.33091591.1975305507
 
-3. Raspberry PI 
+2. Low Cost PIR sensor Module                                           **RM5.00**
+(https://my.cytron.io/p-low-cost-pir-sensor-module)                                     
 
-[link to Google!](http://google.com)
+3. Raspberry Pi 4 Model B - 1GB                                         **RM142.20**
+https://my.cytron.io/p-raspberry-pi-4-model-b-1gb
+
+4. Official RPi 15W (5V/3A) PSU USB C UK Plug-Black                     **RM28.00**
+https://my.cytron.io/p-official-rpi-15w-5v-3a-psu-usb-c-uk-plug-black
+
+Total Cost                                                              **RM200.10**
+
 
 # Limitation
 1. pan tempearture is impossible due to low sensitivity of the OEM brand MLX90614 sensor 
