@@ -96,29 +96,42 @@
 	                            
 	        //var jsonurl = "/data";
 	        function fetchdata(){
-	            $.getJSON('/data', function (data) {            
-	               for (var i=0; i < data.length; i++){                 
+	            $.getJSON('/data', function (data) {   
+
+					//{'c': [{'timestamp': '2019-11-09 09:35:50', 'ds18b20': 27.12, 'mlx_ambient': 31.53, 'mlx_object': 30.59}], 'd': [{'AVG(mlx_object)': 30.552033898305083}]}
+                    
+					console.log(data.c[0][0]); //2019-11-09 09:30:08
+					console.log(data.c[0][1]); 
+					console.log(data.c[0][2]); 
+					console.log(data.c[0][3]); 			
+					console.log(data.d[0][0]); 	
+			
+
+	              // for (var i=0; i < data.length; i++){                 
 	                //shift the old data to make the graph nicer
 	                if (config.data.labels.length === 60) {    
 	                    config.data.labels.shift();
 	                    config.data.datasets[0].data.shift();
 	                    config.data.datasets[1].data.shift();
 	                    config.data.datasets[2].data.shift();
-	                }
+					}
+					
 	                //insert data to graph   
-	                config.data.labels.push(data[i]['timestamp']);
-	                config.data.datasets[0].data.push(data[i]['ds18b20']);
-	                config.data.datasets[1].data.push(data[i]['mlx_ambient']);
-	                config.data.datasets[2].data.push(data[i]['mlx_object']);
+	                config.data.labels.push(data.c[0][0]); //timestamp //2019-11-09 09:35:50
+	                config.data.datasets[0].data.push(data.c[0][1]); //ds18b20 
+	                config.data.datasets[1].data.push(data.c[0][2]); //mlx_ambient
+	                config.data.datasets[2].data.push(data.c[0][3]); //mlx_object
 	                lineChart.update();
 	
 	                //update current value on web
-	                document.getElementById("ds18b20").textContent = data[i]['ds18b20'];
-	                document.getElementById("mlx_ambient").textContent = data[i]['mlx_ambient'];
-	                document.getElementById("mlx_object").textContent = data[i]['mlx_object'];
+	                document.getElementById("ds18b20").textContent = data.c[0][1];  //ds18b20 
+	                document.getElementById("mlx_ambient").textContent = data.c[0][2];//mlx_ambient
+					document.getElementById("mlx_object").textContent = data.c[0][3];  //mlx_object
+					document.getElementById("mlx_object_avg").textContent = data.d[0][0].toFixed(2); //mlx_object_avg
+					
 	
 	                       
-	               }//end of for loop()                               
+	               //}//end of for loop()                               
 	            }); //end of $.getJSON()
 	         }//end of fetchdata()
 	        
