@@ -2,7 +2,9 @@
 
 1. Download insider version of VScode https://code.visualstudio.com/insiders/
 
-2. Install nighty build of SSH remote extension for VCcode && Uninstall the current SSH extension (if have), we neeed to replace the SSH with nighty build version https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-nightly&WT.mc_id=-blog-scottha 
+2. Install nighty build of SSH remote extension for VCcode && Uninstall the current SSH extension (if have), we neeed to replace the SSH with nighty build version 
+
+https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-nightly
 
 
 #Begin connection!
