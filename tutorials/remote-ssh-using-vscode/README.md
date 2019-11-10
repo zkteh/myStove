@@ -15,9 +15,9 @@ Uninstall the current SSH extension (if have), we neeed to replace the SSH with 
    ![ssh-config](/tutorials/remote-ssh-using-vscode/images/ssh-config.png)
    
    Configure it as following:
-   Host : Your RPi IP address;
-   Hostname : RPi hostname;
-   User : RPi username (the one u log in to desktop).
+   Host : Your RPi IP address \
+   Hostname : RPi hostname \
+   User : RPi username (the one u log in to desktop). \
    
 
 # Being the remote SSH
@@ -34,7 +34,7 @@ Uninstall the current SSH extension (if have), we neeed to replace the SSH with 
 	
 	
 # Enable Port Forward for remote SSH from internet (outside LAN)
-5. Note that default SSH port, 22 is not usable due to ISP blocking for security reason.
+5. Note that default SSH port, 22 is not usable due to ISP blocking for security reason. \
    Use this tool to scan if you have successully enabled the port forwarding. https://www.ipfingerprints.com/portscan.php
 
    ```
@@ -53,6 +53,6 @@ Uninstall the current SSH extension (if have), we neeed to replace the SSH with 
    ```
    
 # Enjoy! For More Info:
-https://www.hanselman.com/blog/VisualStudioCodeRemoteDevelopmentOverSSHToARaspberryPiIsButter.aspx
-https://github.com/microsoft/vscode-remote-release/issues/139
-https://www.digitalocean.com/community/questions/how-to-access-port-22-if-isp-has-blocked-port-22
+https://www.hanselman.com/blog/VisualStudioCodeRemoteDevelopmentOverSSHToARaspberryPiIsButter.aspx \
+https://github.com/microsoft/vscode-remote-release/issues/139 \
+https://www.digitalocean.com/community/questions/how-to-access-port-22-if-isp-has-blocked-port-22 
