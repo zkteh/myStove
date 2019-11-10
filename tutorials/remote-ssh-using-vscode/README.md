@@ -2,7 +2,8 @@
 
 1. Download insider version of VScode https://code.visualstudio.com/insiders/
 
-2. Install nighty build of SSH remote extension for VCcode && Uninstall the current SSH extension (if have), we neeed to replace the SSH with nighty build version https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-nightly
+2. Install nighty build of SSH remote extension for VCcode && \
+Uninstall the current SSH extension (if have), we neeed to replace the SSH with nighty build version	https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh-nightly
 
 
 # Configuration
@@ -21,11 +22,11 @@
 
 # Being the remote SSH
 
-4. Select: 'Connect to a host'
-   Choose the host you configured just now
-   Type in the RPi username's password 
-   You should see a green colour box located in the left corner, which means you are now conncted to the RPi using SSH with      	VScode.
-	You can click `+sign`, choose `bash` if the bash terminal did not show up. Type `ls` to show the remote files
+4. Select: 'Connect to a host' \
+   Choose the host you configured just now \
+   Type in the RPi username's password  \
+   You should see a green colour box located in the left corner, which means you are now conncted to the RPi using SSH with     VScode. \ 
+   You can click `+sign`, choose `bash` if the bash terminal did not show up. Type `ls` to show the remote files 
    ![ssh-done](/tutorials/remote-ssh-using-vscode/images/ssh-config.png)
 	
 	You can navigate the remote folder also
