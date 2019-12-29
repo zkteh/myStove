@@ -19,11 +19,14 @@
 	    </div>
 	</div>
 	
-	<p>ds18b20: <span id="timestamp"></span></p>
+	<p>timestamp: <span id="timestamp"></span></p>
 	<p>ds18b20: <span id="ds18b20"></span></p>
 	<p>mlx_ambient: <span id="mlx_ambient"></span></p>
 	<p>mlx_object: <span id="mlx_object"></span></p>
 	<p>mlx_object_avg_over1min: <span id="mlx_object_avg"></span></p>
+	<p>Status: <span id="status"></span></p>
+	<p>intial temperature: <span id="temperature"></span></p>
+	<p>initial average: <span id="average"></span></p>
 	
 	<!--suppress JSUnresolvedLibraryURL -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -99,18 +102,34 @@
 	            
 	        const context = document.getElementById('canvas').getContext('2d');
 	        const lineChart = new Chart(context, config);
-	
+			
+			//declare variable
+			//var temperature = null;
+			//var average = null;
+
+			//insert data from JSON to global variables				
+			var timestamp;
+			var ds18b20;
+			var mlx_ambient;
+			var mlx_object;
+			var mlx_object_avg;
 	                            
 	        //var jsonurl = "/data";
-	        function fetchdata(){
+	        function fetchData(){    //this function will run 3 sec, with setInterval
 	            $.getJSON('/data', function (data) {   
 					
 					//declare var for easy usage
-					var timestamp = data.c[0][0];
-					var ds18b20 = data.c[0][1];
-					var mlx_ambient = data.c[0][2];
-					var mlx_object = data.c[0][3];
-					var mlx_object_avg = data.d[0][0];
+					timestamp = data.c[0][0];
+					ds18b20 = data.c[0][1];
+					mlx_ambient = data.c[0][2];
+					mlx_object = data.c[0][3];
+					mlx_object_avg = data.d[0][0];
+
+					//force update data
+					//if (temperature == null){
+					//	temperature = mlx_object;
+					//	average = mlx_object_avg;
+					//}
 			
 	              // for (var i=0; i < data.length; i++){                
 	                //shift the old data to make the graph nicer
@@ -135,18 +154,118 @@
 	                document.getElementById("ds18b20").textContent = ds18b20;
 	                document.getElementById("mlx_ambient").textContent = mlx_ambient;
 					document.getElementById("mlx_object").textContent = mlx_object; 
-					document.getElementById("mlx_object_avg").textContent = mlx_object_avg;
+					document.getElementById("mlx_object_avg").textContent = mlx_object_avg.toFixed(2);
+					document.getElementById("temperature").textContent = temperature;
+					document.getElementById("average").textContent = average; 				
 
-	               //}//end of for loop()                               
+				   //}//end of for loop()  
+				  
+
+				   dataProcessing();
+				   
+
 	            }); //end of $.getJSON()
 	         }//end of fetchdata()
 			
 			 //loop to get new data
 	        $(document).ready(function(){
-	           setInterval(fetchdata,1000);
-	        });    
+	           setInterval(fetchData,5000);
+			});    
+
+			var last_value = null;
+		
+			function dataProcessing(){
+					
+				var last_on = timestamp;		//insert data
+				var temperature = mlx_object;
+				var average = mlx_object_avg;
+								
+				if (last_value == null){		
+					last_value = 0;
+				} 				
+		
+				console.log("");			
+				console.log("temperature (mlx_object) : " + temperature);
+				console.log("last value : " + last_value);
+				console.log("last_on : " + last_on);
+				console.log("");
+									
+				last_value = temperature;		//insert previous temperature to last_value, 
+				
+				//and compare last_value & latest temperature using the logic below														
+				if (temperature < 70 || temperature <= average+2){
+					console.log("OFF : Less than 70/average");
+					//return ("OFF", "none");	
+				}
+																	
+
+				//Check for last temperature change
+				if (last_value == null){
+					last_value = temperature;
+				}
+					
+
+				//Temperature went down by 3 degrees
+				if (last_value - temperature >= 7){
+					console.log("temperature went down by 3");
+					//return ("MAYBE", "none")
+				}
+					
+
+				if (temperature >= average+10){
+						//Test corner case of low average
+						if (average <= 65 && temperature < 80){
+
+							//Check if temperature is increasing with average
+							if (temperature - last_value > 7){
+								//Greater than average and went up by 3
+								console.log("Greater than average and increasing");
+								//return ("ON", last_on)
+							}
+
+						} else { 	//If low average and not rising, stove is off
+							console.log("Average is low and temperature is not rising significantly");
+						}
+					
+							
+					if (last_value - temperature > 5)
+						console.log("Greater than average and decreasing");
+						//return ("MAYBE", "none")
+					if (temperature >= last_value - 3)
+						//Greater than average final case
+						console.log("ON : Greater than average and increasing");
+						//return ("ON", last_on)			
+				}
+																			
+				if (temperature > 105){
+					//Temperature above 105
+					console.log(" ON : Greater than 105");
+					//return ("ON", last_on)
+				}
+					
+
+				if (last_value != null){
+					//Temperature went up by 5 degrees
+					if (temperature - last_value >= 5)
+						console.log(" ON : temperature went up by 5");
+						//return ("ON", "none")
+				}
+					
+				
+				//Temperature between 100 and 90, but will happen if previous conditions are false
+				if (temperature <= 100 && temperature >= 90){
+					console.log("between 90 and 100");
+					//return ("MAYBE", "none")
+				}
+				
+				//Temperature below 90
+				console.log("OFF : below 90");
+				//return ("OFF", "none")
+			} //end of dataProcess 
+			
+			
 	                       
-	    }); //end of $(document).ready(funct)
+	    }); //end of ready()
 	    
 	</script>
 	</body>
