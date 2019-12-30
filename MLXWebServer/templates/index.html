@@ -4,7 +4,7 @@
 	    <meta charset="UTF-8">
 	    <title>myStove-FYP</title>
 	    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-	    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
 	</head>
 	<body>
 	<div class="container">
@@ -19,14 +19,16 @@
 	    </div>
 	</div>
 	
-	<p>timestamp : <span id="timestamp"></span></p>
+	<p>timestamp : <span id="timestamp"> </span></p>
 	<p>ds18b20 : <span id="ds18b20"></span></p>
 	<p>mlx_ambient : <span id="mlx_ambient"></span></p>
 	<p>mlx_object : <span id="mlx_object"></span></p>
 	<p>mlx_object_avg_over1min : <span id="mlx_object_avg"></span></p>
 	<p>Status:  <span id="status"></span></p>
-	<p>Latest temperature : <span id="temperature"></span></p>
-	<p>Previous temperature : <span id="last_value"></span></p>
+	<p><span id="print"></span></p>
+
+	<!--<div class="box"></div>-->
+
 	
 	<!--suppress JSUnresolvedLibraryURL -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -154,9 +156,7 @@
 	                document.getElementById("ds18b20").textContent = ds18b20;
 	                document.getElementById("mlx_ambient").textContent = mlx_ambient;
 					document.getElementById("mlx_object").textContent = mlx_object; 
-					document.getElementById("mlx_object_avg").textContent = mlx_object_avg.toFixed(2);
-					document.getElementById("temperature").textContent = temperature;
-					document.getElementById("last_value").textContent = last_value; 				
+					document.getElementById("mlx_object_avg").textContent = mlx_object_avg.toFixed(2);			
 
 				   //}//end of for loop()  				  
 				   dataProcessing();				   
@@ -188,6 +188,11 @@
 				console.log("Temperature (average reading of mlx_object) : " + temperature);
 				console.log("Last 10th reading value : " + last_value);
 
+				//prompt initialising & stabilising readings
+				if (last_value == null){
+					document.getElementById("print").textContent = "LOADING : Initialising & stabilising readings";
+				}		
+
 				var array_last_10 = arr.slice(-10);		//insert previous 10 value
 				//console.log(array_last_10);	
 				var max = Math.max(...array_last_10);	//pick the max from the previous 10 readings 
@@ -197,29 +202,34 @@
 				console.log("MIN number from the last 10 : " + min);	
 				console.log("");																						;
 
-				//Temperature went up by 3 degrees
+				//Declare STOVE ON if temperature went up by 3 degrees
 				if (temperature - last_value >= 3){
-					console.log("GAS ON : temperature went UP by 3");
+					console.log("STOVE ON : temperature went UP by 3 & above");
+					document.getElementById("status").textContent = "STOVE ON : Temperature went UP by 3 & above";
 				}
 																					
-				//Temperature went down by 3 degrees
-				if (last_value - temperature >= 3){
-					console.log("GAS OFF : temperature went DOWN by 3");					
+				//Check if temperature doing down and near the ambient temperature, STOVE OFF
+				if (last_value - temperature <= 3 || temperature - mlx_ambient <= 10){
+					console.log("STOVE OFF : temperature went DOWN low enough");	
+					document.getElementById("status").textContent = "STOVE OFF";				
 				}
 
 				//COLD
 				if (Math.floor(temperature) == Math.floor(mlx_ambient)){
-					console.log("COLD : temperature is now equal or smiliar to ambient temp");					
+					console.log("COLD : temperature is now equal or smiliar to ambient temp");						
+					document.getElementById("print").textContent = "COLD : Temperature is now equal or smiliar to ambient temp";	 				
 				}
 
 				//Temperature decreasing
-				if (temperature <= last_value && max >= temperature){
+				if (temperature <= last_value && max >= temperature ){
 					console.log("COOLING DOWN : temperature decreasing");
+					document.getElementById("print").textContent = "COOLING DOWN : Temperature decreasing";
 				}				
 
 				//Temperature increasing 					
-				if (temperature >= last_value && temperature >= min){
+				if (temperature >= last_value && temperature >= min ){
 					console.log("WARMING UP : temperature increasing");
+					document.getElementById("print").textContent = "WARMING UP : Temperature increasing";
 				}		
 
 			} //end of dataProcess   
