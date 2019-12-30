@@ -158,11 +158,8 @@
 					document.getElementById("temperature").textContent = temperature;
 					document.getElementById("last_value").textContent = last_value; 				
 
-				   //}//end of for loop()  
-				  
-
-				   dataProcessing();
-				   
+				   //}//end of for loop()  				  
+				   dataProcessing();				   
 
 	            }); //end of $.getJSON()
 	         }//end of fetchdata()
@@ -177,61 +174,52 @@
 
 			function dataProcessing(){
 					
-				var last_on = timestamp;		//insert data
-				var temperature = mlx_object;
-				var average = mlx_object_avg;
+				//var last_on = timestamp;		
+				//var temperature = mlx_object;
+				var temperature = mlx_object_avg;		//using average as temperature reading
 								
 				if (last_value == null){		
-					last_value = 0;
-				} 				
-		
-				console.log("");			
-				console.log("temperature (mlx_object) : " + temperature);
-				console.log("last value : " + last_value);
-				console.log("last_on : " + last_on);
+					last_value = 0;			//delay reading for last_value
+				} 																	
+
+				arr.push(temperature);				
+				last_value = arr[arr.length - 10];		//pick the previous 10th reading
 				console.log("");
-									
-				//last_value = temperature;		//insert previous temperature to last_value, 
-				
-				arr.push(temperature);
-				last_value = arr[arr.length - 10];
-				console.log("last 10th value " + last_value);
+				console.log("Temperature (average reading of mlx_object) : " + temperature);
+				console.log("Last 10th reading value : " + last_value);
 
-
-				var array_last_10 = arr.slice(-10);
-				console.log(array_last_10);	
-				var max = Math.max(...array_last_10);
-				var min = Math.min(...array_last_10);
+				var array_last_10 = arr.slice(-10);		//insert previous 10 value
+				//console.log(array_last_10);	
+				var max = Math.max(...array_last_10);	//pick the max from the previous 10 readings 
+				var min = Math.min(...array_last_10);				
 			
-				console.log("MAX number from the last 10 " + max);
-				console.log("MIN number from the last 10 " + min);
-				
-				//and compare last_value & latest temperature using the logic below														
-				if (temperature < 35){
-					console.log("OFF : Less than 35");
-					//return ("OFF", "none");	
-				}
+				console.log("MAX number from the last 10 : " + max);
+				console.log("MIN number from the last 10 : " + min);	
+				console.log("");																						;
 
-				//Temperature went down by 3 degrees
+				//Temperature went up by 3 degrees
 				if (temperature - last_value >= 3){
-				console.log("GAS ON: temperature went UP by 3");
+					console.log("GAS ON : temperature went UP by 3");
 				}
 																					
 				//Temperature went down by 3 degrees
 				if (last_value - temperature >= 3){
-					console.log("GAS OFF: temperature went DOWN by 3");					
+					console.log("GAS OFF : temperature went DOWN by 3");					
 				}
 
+				//COLD
 				if (Math.floor(temperature) == Math.floor(mlx_ambient)){
-					console.log("COLD: temperature is now equal or smiliar to ambient temp");					
+					console.log("COLD : temperature is now equal or smiliar to ambient temp");					
 				}
 
-				if (temperature <= average && max > temperature){
-					console.log("COOLING DOWN: temperature decreasing");
+				//Temperature decreasing
+				if (temperature <= last_value && max >= temperature){
+					console.log("COOLING DOWN : temperature decreasing");
 				}				
-					
-				if (temperature >= average && temperature > min){
-					console.log("WARMING UP: temperature increasing");
+
+				//Temperature increasing 					
+				if (temperature >= last_value && temperature >= min){
+					console.log("WARMING UP : temperature increasing");
 				}		
 
 			} //end of dataProcess   
