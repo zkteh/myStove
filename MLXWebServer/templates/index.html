@@ -2,7 +2,7 @@
 	<html lang="en">
 	<head>
 	    <meta charset="UTF-8">
-	    <title>Creating Real-Time Charts with Flask</title>
+	    <title>myStove-FYP</title>
 	    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 	    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
 	</head>
@@ -19,14 +19,14 @@
 	    </div>
 	</div>
 	
-	<p>timestamp: <span id="timestamp"></span></p>
-	<p>ds18b20: <span id="ds18b20"></span></p>
-	<p>mlx_ambient: <span id="mlx_ambient"></span></p>
-	<p>mlx_object: <span id="mlx_object"></span></p>
-	<p>mlx_object_avg_over1min: <span id="mlx_object_avg"></span></p>
-	<p>Status: <span id="status"></span></p>
-	<p>intial temperature: <span id="temperature"></span></p>
-	<p>initial average: <span id="average"></span></p>
+	<p>timestamp : <span id="timestamp"></span></p>
+	<p>ds18b20 : <span id="ds18b20"></span></p>
+	<p>mlx_ambient : <span id="mlx_ambient"></span></p>
+	<p>mlx_object : <span id="mlx_object"></span></p>
+	<p>mlx_object_avg_over1min : <span id="mlx_object_avg"></span></p>
+	<p>Status:  <span id="status"></span></p>
+	<p>Latest temperature : <span id="temperature"></span></p>
+	<p>Previous temperature : <span id="last_value"></span></p>
 	
 	<!--suppress JSUnresolvedLibraryURL -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -156,7 +156,7 @@
 					document.getElementById("mlx_object").textContent = mlx_object; 
 					document.getElementById("mlx_object_avg").textContent = mlx_object_avg.toFixed(2);
 					document.getElementById("temperature").textContent = temperature;
-					document.getElementById("average").textContent = average; 				
+					document.getElementById("last_value").textContent = last_value; 				
 
 				   //}//end of for loop()  
 				  
@@ -169,11 +169,12 @@
 			
 			 //loop to get new data
 	        $(document).ready(function(){
-	           setInterval(fetchData,5000);
+	           setInterval(fetchData,3000);
 			});    
 
 			var last_value = null;
-		
+			var arr = [];
+
 			function dataProcessing(){
 					
 				var last_on = timestamp;		//insert data
@@ -190,77 +191,52 @@
 				console.log("last_on : " + last_on);
 				console.log("");
 									
-				last_value = temperature;		//insert previous temperature to last_value, 
+				//last_value = temperature;		//insert previous temperature to last_value, 
+				
+				arr.push(temperature);
+				last_value = arr[arr.length - 10];
+				console.log("last 10th value " + last_value);
+
+
+				var array_last_10 = arr.slice(-10);
+				console.log(array_last_10);	
+				var max = Math.max(...array_last_10);
+				var min = Math.min(...array_last_10);
+			
+				console.log("MAX number from the last 10 " + max);
+				console.log("MIN number from the last 10 " + min);
 				
 				//and compare last_value & latest temperature using the logic below														
-				if (temperature < 70 || temperature <= average+2){
-					console.log("OFF : Less than 70/average");
+				if (temperature < 35){
+					console.log("OFF : Less than 35");
 					//return ("OFF", "none");	
 				}
-																	
-
-				//Check for last temperature change
-				if (last_value == null){
-					last_value = temperature;
-				}
-					
 
 				//Temperature went down by 3 degrees
-				if (last_value - temperature >= 7){
-					console.log("temperature went down by 3");
+				if (last_value - temperature >= 3){
+				console.log("GAS ON: temperature went UP by 3");
+				//return ("MAYBE", "none")
+				}
+																
+					
+				//Temperature went down by 3 degrees
+				if (last_value - temperature >= 3){
+					console.log("GAS OFF: temperature went DOWN by 3");
 					//return ("MAYBE", "none")
 				}
-					
 
-				if (temperature >= average+10){
-						//Test corner case of low average
-						if (average <= 65 && temperature < 80){
+				if (temperature <= average && last_value > temperature && max > temperature){
+					console.log("COOLING DOWN: temperature decreasing");
+					//return ("MAYBE", "none")s
+				}
 
-							//Check if temperature is increasing with average
-							if (temperature - last_value > 7){
-								//Greater than average and went up by 3
-								console.log("Greater than average and increasing");
-								//return ("ON", last_on)
-							}
+				if (temperature >= average && temperature > min){
+					console.log("WARMING UP: temperature increasing");
+					//return ("MAYBE", "none")
+				}
 
-						} else { 	//If low average and not rising, stove is off
-							console.log("Average is low and temperature is not rising significantly");
-						}
-					
+
 							
-					if (last_value - temperature > 5)
-						console.log("Greater than average and decreasing");
-						//return ("MAYBE", "none")
-					if (temperature >= last_value - 3)
-						//Greater than average final case
-						console.log("ON : Greater than average and increasing");
-						//return ("ON", last_on)			
-				}
-																			
-				if (temperature > 105){
-					//Temperature above 105
-					console.log(" ON : Greater than 105");
-					//return ("ON", last_on)
-				}
-					
-
-				if (last_value != null){
-					//Temperature went up by 5 degrees
-					if (temperature - last_value >= 5)
-						console.log(" ON : temperature went up by 5");
-						//return ("ON", "none")
-				}
-					
-				
-				//Temperature between 100 and 90, but will happen if previous conditions are false
-				if (temperature <= 100 && temperature >= 90){
-					console.log("between 90 and 100");
-					//return ("MAYBE", "none")
-				}
-				
-				//Temperature below 90
-				console.log("OFF : below 90");
-				//return ("OFF", "none")
 			} //end of dataProcess 
 			
 			
