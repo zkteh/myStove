@@ -213,34 +213,29 @@
 				}
 
 				//Temperature went down by 3 degrees
-				if (last_value - temperature >= 3){
+				if (temperature - last_value >= 3){
 				console.log("GAS ON: temperature went UP by 3");
-				//return ("MAYBE", "none")
 				}
-																
-					
+																					
 				//Temperature went down by 3 degrees
 				if (last_value - temperature >= 3){
-					console.log("GAS OFF: temperature went DOWN by 3");
-					//return ("MAYBE", "none")
+					console.log("GAS OFF: temperature went DOWN by 3");					
 				}
 
-				if (temperature <= average && last_value > temperature && max > temperature){
+				if (Math.floor(temperature) == Math.floor(mlx_ambient)){
+					console.log("COLD: temperature is now equal or smiliar to ambient temp");					
+				}
+
+				if (temperature <= average && max > temperature){
 					console.log("COOLING DOWN: temperature decreasing");
-					//return ("MAYBE", "none")s
-				}
-
+				}				
+					
 				if (temperature >= average && temperature > min){
 					console.log("WARMING UP: temperature increasing");
-					//return ("MAYBE", "none")
-				}
+				}		
 
+			} //end of dataProcess   
 
-							
-			} //end of dataProcess 
-			
-			
-	                       
 	    }); //end of ready()
 	    
 	</script>
