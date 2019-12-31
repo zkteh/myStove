@@ -125,7 +125,7 @@
 					ds18b20 = data.c[0][1];
 					mlx_ambient = data.c[0][2];
 					mlx_object = data.c[0][3];
-					mlx_object_avg = data.d[0][0];
+					mlx_object_avg = data.d[0][0].toFixed(2);
 
 					//force update data
 					//if (temperature == null){
@@ -156,7 +156,7 @@
 	                document.getElementById("ds18b20").textContent = ds18b20;
 	                document.getElementById("mlx_ambient").textContent = mlx_ambient;
 					document.getElementById("mlx_object").textContent = mlx_object; 
-					document.getElementById("mlx_object_avg").textContent = mlx_object_avg.toFixed(2);			
+					document.getElementById("mlx_object_avg").textContent = mlx_object_avg;			
 
 				   //}//end of for loop()  				  
 				   dataProcessing();				   
@@ -171,7 +171,10 @@
 
 			var last_value = null;
 			var arr = [];
+			var counterStoveOff = 0;	
+			var counterStoveOn = 0;		
 
+			//core of the system
 			function dataProcessing(){
 					
 				//var last_on = timestamp;		
@@ -200,17 +203,17 @@
 			
 				console.log("MAX number from the last 10 : " + max);
 				console.log("MIN number from the last 10 : " + min);	
-				console.log("");																						;
+				console.log("");																		
 
-				//Declare STOVE ON if temperature went up by 3 degrees
-				if (temperature - last_value >= 3){
-					console.log("STOVE ON : temperature went UP by 3 & above");
-					document.getElementById("status").textContent = "STOVE ON : Temperature went UP by 3 & above";
+				//Declare STOVE ON if temperature keep INCREASING after 10 loop
+				if (counterStoveOn > 10 ){
+					console.log("STOVE ON");
+					document.getElementById("status").textContent = "STOVE ON";
 				}
-																					
-				//Check if temperature doing down and near the ambient temperature, STOVE OFF
-				if (last_value - temperature <= 3 || temperature - mlx_ambient <= 10){
-					console.log("STOVE OFF : temperature went DOWN low enough");	
+																											
+				//Declare STOVE OFF if temperature keep DECREASING after 10 loop
+				if (counterStoveOff > 10 ){
+					console.log("STOVE OFF");	
 					document.getElementById("status").textContent = "STOVE OFF";				
 				}
 
@@ -221,15 +224,19 @@
 				}
 
 				//Temperature decreasing
-				if (temperature <= last_value && max >= temperature ){
-					console.log("COOLING DOWN : temperature decreasing");
+				if (temperature < last_value && max > temperature ){
+					console.log("COOLING DOWN : temperature decreasing");				
 					document.getElementById("print").textContent = "COOLING DOWN : Temperature decreasing";
+					counterStoveOff++;
+					counterStoveOn = 0;
 				}				
 
 				//Temperature increasing 					
-				if (temperature >= last_value && temperature >= min ){
-					console.log("WARMING UP : temperature increasing");
+				if (temperature > last_value && temperature > min ){
+					console.log("WARMING UP : temperature increasing");					
 					document.getElementById("print").textContent = "WARMING UP : Temperature increasing";
+					counterStoveOn++;	
+					counterStoveOff = 0;									
 				}		
 
 			} //end of dataProcess   
