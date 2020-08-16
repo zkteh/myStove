@@ -2,43 +2,335 @@
 	<html lang="en">
 	<head>
 	    <meta charset="UTF-8">
-	    <title>myStove-FYP</title>
-	    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
+		<title>myStove-FYP</title>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
+		
+		<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+
+	
 	</head>
+
+
 	<body>
-	<div class="container">
+
+		<!-- <div id="myId" class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none">
+				
+				<strong>Human!</strong> Where are you.
+				<button type="button" class="close" onclick="$('#myId').hide()" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+				
+			</div>
+		</div> -->
+
+
+
+		<div class="toast" data-autohide="false" style="position: absolute; top: 0; right: 0;  z-index:1;">
+			<div class="toast-header">
+			  <svg class=" rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img">
+							<rect fill="#FF0000" width="100%" height="100%" /></svg>
+			  <strong class="mr-auto">Reminder</strong>
+			  <!-- <small class="text-muted">11 mins ago</small> -->
+			  <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						  </button>
+			</div>
+			<div class="toast-body">
+			  Hello, Your stove is left unattended!
+			</div>
+		  </div>
+
+
+
+
+
+
+	
+		<!-- <div>Registration closes in <span id="time"></span> minutes!</div> -->
+
+
+
+	
+	<!-- graph css here -->
+	<div class="container">	
 	    <div class="row">
-	        <div class="col-12">
+	        <div class="col-12  ">	
+										
 	            <div class="card">
 	                <div class="card-body">
 	                    <canvas id="canvas"></canvas>
 	                </div>
 	            </div>
 	        </div>
-	    </div>
-	</div>
+		</div>
+		
+		<!-- card css here-->
+		<div class="container">	
+
+			<div class="row">		
+				<div class="col">	
+					<div class="card-box bg-green">
+						<h3> 
+							<span class="myText-AmbientTemperature"> 0.00 </span>
+						</h3>
+						
+						<p> Ambient temperature </p>
+					</div>											
+				</div>		
+				<div class="col">	
+					<div class="card-box bg-blue">
+						<h3> 
+							<span class="myText-StoveTemperature"> 0.00</span>
+						</h3>
+						<p> Stove temperature </p>
+					</div>											
+				</div>		
+				<div class="col">
+					<div class="card-box bg-red">
+						<h3> 
+							<span class="myText-StoveStatus"> ON/OFF </span>
+						</h3>
+						<p> Stove status </p>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col">	
+					<div class="card-box bg-purple">
+						<h3> 
+							<span class="myText-HumanMotion"> Detected/Not Detected </span>	
+						</h3>
+						<p> Human motion </p>
+					</div>
+				</div>							
+				<div class="col">
+					<div class="card-box bg-orange">
+						<h3> 
+							<span class="myText-ReminderCountdown"> 0.00 </span>
+						</h3>
+						<p> Reminder countdown </p>
+					</div>
+				</div>									
+			</div>
+
+		</div> 
+				
 	
-	<p>timestamp : <span id="timestamp"> </span></p>
+
+
+	<!-- <p>timestamp : <span id="timestamp"> </span></p>
 	<p>ds18b20 : <span id="ds18b20"></span></p>
 	<p>mlx_ambient : <span id="mlx_ambient"></span></p>
 	<p>mlx_object : <span id="mlx_object"></span></p>
 	<p>mlx_object_avg_over1min : <span id="mlx_object_avg"></span></p>
+	<p>Human Detected?:  <span id="humanPresence"></span></p>
 	<p>Status:  <span id="status"></span></p>
-	<p><span id="print"></span></p>
+	<p><span id="print"></span></p> -->
 
-	<!--<div class="box"></div>-->
+</body>
+
+
+
+
+
+
+
+	<!-- Add Firebase products that you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-firestore.js"></script>
+
+
+
+	<script>
+
+	document.addEventListener('DOMContentLoaded', event => {
+
+	})	
+
+	// Initialize Cloud Firestore through Firebase
+	const firebaseConfig = {
+		apiKey: 'apikey',
+		authDomain: 'authDomain.firebaseapp.com"',
+		projectId: 'projectId',
+
+		//firebase web app
+	};
+
+	firebase.initializeApp(firebaseConfig)
+	const db = firebase.firestore()
+
+
+
+
+
+
+
+	// var docRef = db.collection("users")
+	// 			.orderBy("timestamp", "desc")
+	// 			.limit(1)
+
+	// docRef.get().then(function(doc) {
+	// 	if (doc.exists) {
+	// 		console.log("Document data:", doc.data());
+	// 	} else {
+	// 		// doc.data() will be undefined in this case
+	// 		console.log("No such document!");
+	// 	}
+	// 	}).catch(function(error) {
+	// 		console.log("Error getting document:", error);
+	// });
 
 	
-	<!--suppress JSUnresolvedLibraryURL -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-	<!--suppress JSUnresolvedLibraryURL -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-	<!--suppress JSUnresolvedLibraryURL -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    // .get()
+    // .then(function(querySnapshot) {
+    //     querySnapshot.forEach(function(doc) {
+    //         // doc.data() is never undefined for query doc snapshots
+    //         console.log(doc.id, " => ", doc.data());
+    //     });
+    // })
+    // .catch(function(error) {
+    //     console.log("Error getting documents: ", error);
+	// });
+	
+
+
+
+
+	//require = node.js server side
+	//https://flaviocopes.com/firebase-firestore/
+
+
 		
-	<script>
-	    $(document).ready(function () {	        	        	     
+	
+
+
+
+
+
+	//var socket = io.connect('http://' + document.domain + ':' + location.port);
+	//var socket = io.connect('/');
+	//var socket = io.connect('http://192.168.1.189:55555');
+
+
+  
+
+
+	// $(document).ready(function() {
+
+	// 	var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+	// 	socket.on('connect', function() {
+	// 		socket.send('User has connected!');
+	// 	});
+
+	// 	socket.on('my_message', function(msg) {
+	// 		$("#messages").append('<li>'+msg+'</li>');
+	// 		console.log('Received message');
+	// 	});
+
+	// 	$('#sendbutton').on('click', function() {
+	// 		socket.send($('#myMessage').val());
+	// 		$('#myMessage').val('');
+	// 	});
+
+	// });	
+
+
+		var timer; 
+		var varToStopTimer;			//added this too, to let stoveOFF to off timer
+		//var timerCalled = false;	//I add this, becus the stoveON will keep calling this function
+		var isRunning = false;
+
+		function startTimer(duration, display) {
+			timer = duration;
+			var minutes, seconds;
+
+			varToStopTimer = setInterval(function () {
+				//timerCalled = true;		//the stoveON will only call if timerCalled = false
+				isRunning = true;
+
+				minutes = parseInt(timer / 60, 10);
+				seconds = parseInt(timer % 60, 10);
+
+				minutes = minutes < 10 ? "0" + minutes : minutes;
+				seconds = seconds < 10 ? "0" + seconds : seconds;
+				//display.textContent = minutes + ":" + seconds;
+				$(".myText-ReminderCountdown").text(minutes + ":" + seconds);
+				
+				if (--timer < 0) {
+					//timer = duration;					
+					console.log("times up");
+					//$('#myId').show();   //show danger alert 
+					$('.toast').toast('show');
+					$.get("https://api.telegram.org/bot[botToken]/sendMessage?chat_id=[chatid]&text=remindersent", function(data){console.log(data)});
+			
+					clearInterval(varToStopTimer); //stop the timer 
+					isRunning = false;
+
+					//timerCalled = false;		//let stoveON to restart the timer if the stove is on
+				}
+			}, 1000);	
+		}
+
+		function resetTimer() {
+			timer = 30 //60 * 5;
+		}
+
+		window.onload = function () {	
+			fiveMinutes = 30 //60 * 5,
+			display = document.querySelector('#time');
+			//startTimer(fiveMinutes, display);	 //moved to stoveON
+			
+		
+		};
+
+
+
+
+
+	    $(document).ready(function () {	    
+
+			//$(".myAmbientTemperature").text("Hello Word");
+
+			//This event fires immediately when the close instance method is called.
+
+			
+
+	
+		// var alertHuman;
+		// var alertHumanisTriggered = false;
+
+		// socket.on('stoveON', function(msg) {	
+		// 	console.log(msg.message);
+		// 	if(!isTriggered){
+		// 		console.log("sending reminder")
+		// 		alertHuman = setTimeout(function(){ 
+		// 			alert("Hello"); 
+		// 		}, 10000);	
+		// 		alertHumanisTriggered = true;	
+		// 	}	
+		// });	
+
+		// socket.on('humanBack', function(msg) {
+		// 	console.log(msg.message);
+		// 	clearTimeout(alertHuman);
+		// });	
+	
+		// socket.on('stoveOFF', function(msg) {
+		// 	console.log(msg.message);
+		// 	clearTimeout(alertHuman);	
+		// });	
+
+
+
+			     	     
 	        const config = {
 	            type: 'line',
 	            data: {
@@ -103,7 +395,9 @@
 	        };
 	            
 	        const context = document.getElementById('canvas').getContext('2d');
-	        const lineChart = new Chart(context, config);
+			const lineChart = new Chart(context, config);
+			
+
 			
 			//declare variable
 			//var temperature = null;
@@ -115,17 +409,114 @@
 			var mlx_ambient;
 			var mlx_object;
 			var mlx_object_avg;
+
+			var human_presence;
+
+		
+	
+
 	                            
 	        //var jsonurl = "/data";
-	        function fetchData(){    //this function will run 3 sec, with setInterval
-	            $.getJSON('/data', function (data) {   
+	        function fetchData(data, date){    //this function will run 3 sec, with setInterval
+	            //$.getJSON('/data', function (data) {   
+					//console.log(data);
+
+					//console.log(data.mlx_ambient);	
+					//console.log(data.mlx_object);	
+					//console.log(date);	
+
+					// for (var i = 0; i < data.length; i++) {
+					// 	console.log(data[i].mlx_ambient);						//[0] is the 1st patient, [1]=2nd, and so on
+					// 	console.log(data[i].mlx_object);
+					// 	console.log(data[i].timestamp);			
+					// 	//console.log(data[i].Timestamp);
+					// }
 					
-					//declare var for easy usage
-					timestamp = data.c[0][0];
-					ds18b20 = data.c[0][1];
-					mlx_ambient = data.c[0][2];
-					mlx_object = data.c[0][3];
-					mlx_object_avg = data.d[0][0].toFixed(2);
+					// //declare var for easy usage
+					// timestamp = data.c[0][0];
+					// ds18b20 = data.c[0][1];
+					// mlx_ambient = data.c[0][2];
+					// mlx_object = data.c[0][3];					
+					// mlx_object_avg = data.d[0][0].toFixed(2);
+					// //human_presence = data.e[0][0].toString();
+
+						//declare var for easy usage
+					timestamp = date;
+					mlx_ambient = data.mlx_ambient;
+					mlx_object = data.mlx_object;	
+
+					$(".myText-AmbientTemperature").text(data.mlx_ambient);
+					$(".myText-StoveTemperature").text(data.mlx_object);
+
+	
+							//data.motion_detected;
+
+					//console.log(data.motion_detected);
+
+	
+					
+		
+
+					if (mlx_object - mlx_ambient >= 2){
+
+						//$('#myId').show();   //show danger alert 
+						console.log("stoveON")
+						$(".myText-StoveStatus").text("ON");
+						
+
+
+						if(!isRunning){
+							startTimer(30, display)
+						}
+
+					
+
+						//start timer 		
+						
+					//display = document.querySelector('#time');
+
+					//setInterval(varToStopTimer);
+
+
+			}
+
+
+						
+					
+
+					//if human back, reset timer, alreadt set in document function
+
+					if (mlx_object - mlx_ambient < 1){
+						console.log("stoveOFF")
+						$(".myText-StoveStatus").text("OFF");
+						//OFF timer
+						//clear interval
+						clearInterval(varToStopTimer);
+						isRunning = false;
+					}
+
+
+
+
+					
+
+
+
+
+					//console.log("human motion"+ human.motion_detected);
+
+					//if (human_motion)
+
+
+					
+
+
+
+
+
+					
+
+					
 
 					//force update data
 					//if (temperature == null){
@@ -145,104 +536,172 @@
 					
 	                //insert data to graph   
 	                config.data.labels.push(timestamp); 
-	                config.data.datasets[0].data.push(ds18b20); 
+	                config.data.datasets[0].data.push(ds18b20); 			
 	                config.data.datasets[1].data.push(mlx_ambient); 
 					config.data.datasets[2].data.push(mlx_object); 
 					config.data.datasets[3].data.push(mlx_object_avg); 
 	                lineChart.update();
 	
-					//update current value on web
-					document.getElementById("timestamp").textContent = timestamp;  
-	                document.getElementById("ds18b20").textContent = ds18b20;
-	                document.getElementById("mlx_ambient").textContent = mlx_ambient;
-					document.getElementById("mlx_object").textContent = mlx_object; 
-					document.getElementById("mlx_object_avg").textContent = mlx_object_avg;			
+					// //update current value on web
+					// document.getElementById("timestamp").textContent = timestamp;  
+	                // document.getElementById("ds18b20").textContent = ds18b20;
+	                // document.getElementById("mlx_ambient").textContent = mlx_ambient;
+					// document.getElementById("mlx_object").textContent = mlx_object; 
+					// document.getElementById("mlx_object_avg").textContent = mlx_object_avg;		
+					// document.getElementById("humanPresence").textContent = human_presence;			
 
 				   //}//end of for loop()  				  
-				   dataProcessing();				   
+				  //dataProcessing();	
 
-	            }); //end of $.getJSON()
-	         }//end of fetchdata()
+				  
+				   
+					
+				   
+				
+	            //}); //end of $.getJSON()
+			 }//end of fetchdata()
+			 
+			 db.collection("heat_sensor").orderBy("timestamp", "desc").limit(1)
+				.onSnapshot(function(snapshot) {
+				snapshot.docChanges().forEach(function(change) {
+					if (change.type === "added") {
+						//console.log("New city: ", change.doc.data());
+						//console.log(change.doc.data())
+						var timestampDate = change.doc.data().timestamp.toDate();
+						//console.log(timestampDate);		
+						fetchData(change.doc.data(), timestampDate);						
+					} 
+					// if (change.type === "modified") {
+					//     console.log("Modified city: ", change.doc.data());
+					// }
+					// if (change.type === "removed") {
+					//     console.log("Removed city: ", change.doc.data());
+					// }
+				
+			});
+
+		});
+	
+
+			db.collection("human_motion").orderBy("timestamp", "desc").limit(1)
+				.onSnapshot(function(snapshot) {
+				snapshot.docChanges().forEach(function(change) {
+					if (change.type === "added") {
+						//console.log("New city: ", change.doc.data());
+						//console.log(change.doc.data())
+						//console.log(change.doc.data().motion_detected);
+						//var timestampDate = change.doc.data().timestamp.toDate();
+						//console.log(timestampDate);		
+						//fetchData(change.doc.data(), timestampDate);
+						//fetchData(change.doc.data());
+						console.log("detected");
+						$(".myText-HumanMotion").text("Detected");
+						
+						setTimeout(function(){
+							$(".myText-HumanMotion").text("-");
+
+						},3000);
+						//$(".myText-HumanMotion").text("Not Detected");
+
+						resetTimer();
+						//clearInterval(test);
+						
+						
+					}
+
+				
+					// if (change.type === "modified") {
+					//     console.log("Modified city: ", change.doc.data());
+					// }
+					// if (change.type === "removed") {
+					//     console.log("Removed city: ", change.doc.data());
+					// }
+				});
+			});
+
+
+
 			
 			 //loop to get new data
 	        $(document).ready(function(){
-	           setInterval(fetchData,3000);
-			});    
 
-			var last_value = null;
+				// $("#myId").on('closed.bs.alert', function(){
+				// alert("Alert message box has been closed.");
+
+
+
+			});
+					   
+
+ 
+
+			var last_value = null;		
+			var last_value2 = null;	
 			var arr = [];
+			var human_presence_array = [];
 			var counterStoveOff = 0;	
 			var counterStoveOn = 0;		
 
 			//core of the system
-			function dataProcessing(){
+			function dataProcessing(input){
+
+				var something;
+
+				function alert(){
+					alert("Hello")
+				}
+
+				if (input == "humanBack"){
+					console.log("humanisback");					
+				}
+
+				if (input == "stoveON"){
+					console.log("stoveON");
+
+					var something = (function() {
+						var executed = false;
+						return function() {
+							if (!executed) {
+								executed = true;
+								// do something
+								Console.log("this function only run once");
+								//something = setTimeout(function(){ alert("Hello"); }, 3000);
+								}
+							};
+					})();
+
+					something(); // "do something" happens
+					//something(); // nothing happens			
+				}
+
+				if (input == "stoveOFF"){
+					console.log("stoveOFF");
+					//clearTimeout(something);
+					something();
+				}
+
+				if (input == "stoveON" && input == "huamanBack"){
+					console.log("reset counter");
+					//clearTimeout(something);
+					something();
+				}
+
+				
 					
-				//var last_on = timestamp;		
-				//var temperature = mlx_object;
-				var temperature = mlx_object_avg;		//using average as temperature reading
-								
-				if (last_value == null){		
-					last_value = 0;			//delay reading for last_value
-				} 																	
-
-				arr.push(temperature);				
-				last_value = arr[arr.length - 10];		//pick the previous 10th reading
-				console.log("");
-				console.log("Temperature (average reading of mlx_object) : " + temperature);
-				console.log("Last 10th reading value : " + last_value);
-
-				//prompt initialising & stabilising readings
-				if (last_value == null){
-					document.getElementById("print").textContent = "LOADING : Initialising & stabilising readings";
-				}		
-
-				var array_last_10 = arr.slice(-10);		//insert previous 10 value
-				//console.log(array_last_10);	
-				var max = Math.max(...array_last_10);	//pick the max from the previous 10 readings 
-				var min = Math.min(...array_last_10);				
+				
 			
-				console.log("MAX number from the last 10 : " + max);
-				console.log("MIN number from the last 10 : " + min);	
-				console.log("");																		
-
-				//Declare STOVE ON if temperature keep INCREASING after 10 loop
-				if (counterStoveOn > 10 ){
-					console.log("STOVE ON");
-					document.getElementById("status").textContent = "STOVE ON";
-				}
-																											
-				//Declare STOVE OFF if temperature keep DECREASING after 10 loop
-				if (counterStoveOff > 10 ){
-					console.log("STOVE OFF");	
-					document.getElementById("status").textContent = "STOVE OFF";				
-				}
-
-				//COLD
-				if (Math.floor(temperature) == Math.floor(mlx_ambient)){
-					console.log("COLD : temperature is now equal or smiliar to ambient temp");						
-					document.getElementById("print").textContent = "COLD : Temperature is now equal or smiliar to ambient temp";	 				
-				}
-
-				//Temperature decreasing
-				if (temperature < last_value && max > temperature ){
-					console.log("COOLING DOWN : temperature decreasing");				
-					document.getElementById("print").textContent = "COOLING DOWN : Temperature decreasing";
-					counterStoveOff++;
-					counterStoveOn = 0;
-				}				
-
-				//Temperature increasing 					
-				if (temperature > last_value && temperature > min ){
-					console.log("WARMING UP : temperature increasing");					
-					document.getElementById("print").textContent = "WARMING UP : Temperature increasing";
-					counterStoveOn++;	
-					counterStoveOff = 0;									
-				}		
-
 			} //end of dataProcess   
 
+			
+
 	    }); //end of ready()
-	    
+
+
+		
+
+
 	</script>
-	</body>
+
+
+
 	</html>
