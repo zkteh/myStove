@@ -4,23 +4,19 @@ import time
 from gpiozero import MotionSensor
 motion_counter = 0
 
-#import socketio
-
-#sio = socketio.Client()
-
-
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-cred = credentials.Certificate("/home/pi/Sensors_Database/MLXWebServer/mystove-79717-firebase-adminsdk-c9gn5-acd851d033.json")
+cred = credentials.Certificate("credentials.json")
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-pir = MotionSensor(23)        
+pir = MotionSensor(23)      #PIR motion sensor is connected to Pin23     
 print("Waiting for PIR to settle")
-pir.wait_for_no_motion()
+pir.wait_for_no_motion()    #When first powered on, the PIR motion sensor will trigger itself for several time, which is normal, 
+                            #thus, we can call a wait_for_no_motion(), then only let the program continue to runs.
 
 def connect():
     global motion_counter
@@ -28,19 +24,16 @@ def connect():
         pir.wait_for_motion()
         if (pir.wait_for_motion()):     
             motion_counter += 1
-            if motion_counter >= 3:
-                 #sio.emit('humanBack', {'message': 'humanBack'})
+            if motion_counter >= 3:  #only store data if the motion has been triggered more than 3 times.               
                  print("Motion detected!", str(datetime.now()))  
-                 db.collection(u'human_motion').add({
-     
-                 u'motion_detected': True,
-                 u'timestamp': firestore.SERVER_TIMESTAMP
-                 })   
 
-                 motion_counter = 0            
+                 db.collection('human_motion').add({    
+                 'motion_detected': True,
+                 'timestamp': firestore.SERVER_TIMESTAMP
+                 })   
+                 
+                 motion_counter = 0        #reset the counter    
         time.sleep(3) #to avoid multiple detection
 
-#sio.connect('http://localhost:55555')
-    
 if __name__ == '__main__':
     connect()

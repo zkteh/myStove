@@ -5,31 +5,17 @@
 		<title>myStove-FYP</title>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>
-		
-		<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
-
-	
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js" integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg==" crossorigin="anonymous"></script>		
+		<!-- method to declare local style.css for flask -->
+		<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">	
 	</head>
 
 
 	<body>
 
-		<!-- <div id="myId" class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none">
-				
-				<strong>Human!</strong> Where are you.
-				<button type="button" class="close" onclick="$('#myId').hide()" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
-				
-			</div>
-		</div> -->
-
-
-
+	<!-- reminder toast class here -->
 		<div class="toast" data-autohide="false" style="position: absolute; top: 0; right: 0;  z-index:1;">
 			<div class="toast-header">
 			  <svg class=" rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img">
@@ -45,22 +31,11 @@
 			</div>
 		  </div>
 
-
-
-
-
-
 	
-		<!-- <div>Registration closes in <span id="time"></span> minutes!</div> -->
-
-
-
-	
-	<!-- graph css here -->
+	<!-- graph class here -->
 	<div class="container">	
 	    <div class="row">
-	        <div class="col-12  ">	
-										
+	        <div class="col-12  ">											
 	            <div class="card">
 	                <div class="card-body">
 	                    <canvas id="canvas"></canvas>
@@ -69,7 +44,7 @@
 	        </div>
 		</div>
 		
-		<!-- card css here-->
+		<!-- bootstrap card class here-->
 		<div class="container">	
 
 			<div class="row">		
@@ -77,8 +52,7 @@
 					<div class="card-box bg-green">
 						<h3> 
 							<span class="myText-AmbientTemperature"> 0.00 </span>
-						</h3>
-						
+						</h3>						
 						<p> Ambient temperature </p>
 					</div>											
 				</div>		
@@ -121,227 +95,74 @@
 
 		</div> 
 				
-	
+	</body>
 
-
-	<!-- <p>timestamp : <span id="timestamp"> </span></p>
-	<p>ds18b20 : <span id="ds18b20"></span></p>
-	<p>mlx_ambient : <span id="mlx_ambient"></span></p>
-	<p>mlx_object : <span id="mlx_object"></span></p>
-	<p>mlx_object_avg_over1min : <span id="mlx_object_avg"></span></p>
-	<p>Human Detected?:  <span id="humanPresence"></span></p>
-	<p>Status:  <span id="status"></span></p>
-	<p><span id="print"></span></p> -->
-
-</body>
-
-
-
-
-
-
-
-	<!-- Add Firebase products that you want to use -->
+	<!--Firebase SDKs -->
 	<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-auth.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-firestore.js"></script>
-
-
 
 	<script>
 
-	document.addEventListener('DOMContentLoaded', event => {
-
-	})	
-
-	// Initialize Cloud Firestore through Firebase
+	//Firebase project configuration
 	const firebaseConfig = {
-		apiKey: 'apikey',
-		authDomain: 'authDomain.firebaseapp.com"',
-		projectId: 'projectId',
-
-		//firebase web app
+		apiKey: 'apiKey',
+		authDomain: '[projectId].firebaseapp.com"',
+		projectId: '[projectId]',		
 	};
 
+	//Initialize Firebase
 	firebase.initializeApp(firebaseConfig)
 	const db = firebase.firestore()
 
+	var timer; 
+	var varToStopTimer;			//to let stoveOFF to off timer
+	var isTimerRunning = false;
 
-
-
-
-
-
-	// var docRef = db.collection("users")
-	// 			.orderBy("timestamp", "desc")
-	// 			.limit(1)
-
-	// docRef.get().then(function(doc) {
-	// 	if (doc.exists) {
-	// 		console.log("Document data:", doc.data());
-	// 	} else {
-	// 		// doc.data() will be undefined in this case
-	// 		console.log("No such document!");
-	// 	}
-	// 	}).catch(function(error) {
-	// 		console.log("Error getting document:", error);
-	// });
-
-	
-    // .get()
-    // .then(function(querySnapshot) {
-    //     querySnapshot.forEach(function(doc) {
-    //         // doc.data() is never undefined for query doc snapshots
-    //         console.log(doc.id, " => ", doc.data());
-    //     });
-    // })
-    // .catch(function(error) {
-    //     console.log("Error getting documents: ", error);
-	// });
-	
-
-
-
-
-	//require = node.js server side
-	//https://flaviocopes.com/firebase-firestore/
-
-
-		
-	
-
-
-
-
-
-	//var socket = io.connect('http://' + document.domain + ':' + location.port);
-	//var socket = io.connect('/');
-	//var socket = io.connect('http://192.168.1.189:55555');
-
-
-  
-
-
-	// $(document).ready(function() {
-
-	// 	var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-	// 	socket.on('connect', function() {
-	// 		socket.send('User has connected!');
-	// 	});
-
-	// 	socket.on('my_message', function(msg) {
-	// 		$("#messages").append('<li>'+msg+'</li>');
-	// 		console.log('Received message');
-	// 	});
-
-	// 	$('#sendbutton').on('click', function() {
-	// 		socket.send($('#myMessage').val());
-	// 		$('#myMessage').val('');
-	// 	});
-
-	// });	
-
-
-		var timer; 
-		var varToStopTimer;			//added this too, to let stoveOFF to off timer
-		//var timerCalled = false;	//I add this, becus the stoveON will keep calling this function
-		var isRunning = false;
-
-		function startTimer(duration, display) {
+		//Original author: https://stackoverflow.com/questions/20618355/the-simplest-possible-javascript-countdown-timer
+		function startTimer(duration) {
 			timer = duration;
 			var minutes, seconds;
+			isTimerRunning = true;
 
-			varToStopTimer = setInterval(function () {
-				//timerCalled = true;		//the stoveON will only call if timerCalled = false
-				isRunning = true;
+			varToStopTimer = setInterval(function () {			
+				//isTimerRunning = true;			//the stoveON will only call startTimer() again if isTimerRunning = false
 
 				minutes = parseInt(timer / 60, 10);
 				seconds = parseInt(timer % 60, 10);
 
 				minutes = minutes < 10 ? "0" + minutes : minutes;
 				seconds = seconds < 10 ? "0" + seconds : seconds;
-				//display.textContent = minutes + ":" + seconds;
-				$(".myText-ReminderCountdown").text(minutes + ":" + seconds);
-				
-				if (--timer < 0) {
-					//timer = duration;					
-					console.log("times up");
-					//$('#myId').show();   //show danger alert 
-					$('.toast').toast('show');
-					$.get("https://api.telegram.org/bot[botToken]/sendMessage?chat_id=[chatid]&text=remindersent", function(data){console.log(data)});
+
+				$(".myText-ReminderCountdown").text(minutes + ":" + seconds);	//update the bootstrap card for visualisation
+											
+				if (--timer < 0) {		//if times up:					
+					console.log("times up, sending reminder...");		
+					$('.toast').toast('show'); //show toast notifcation in web
+					
+					//Chnage Telegram chatID here
+					$.get("https://api.telegram.org/bot[botToken]/sendMessage?chat_id=[chat_id]]&text=Hey user, your stove is left unattended", function(data){console.log(data)});
 			
 					clearInterval(varToStopTimer); //stop the timer 
-					isRunning = false;
-
-					//timerCalled = false;		//let stoveON to restart the timer if the stove is on
+					isTimerRunning = false;					
 				}
 			}, 1000);	
 		}
 
-		function resetTimer() {
-			timer = 30 //60 * 5;
+		function resetTimer() {	
+			timer = 60 * 1;
 		}
 
-		window.onload = function () {	
-			fiveMinutes = 30 //60 * 5,
-			display = document.querySelector('#time');
-			//startTimer(fiveMinutes, display);	 //moved to stoveON
-			
+		// window.onload = function () {				
+		// 	display = document.querySelector('#time');			
+		// };
 		
-		};
-
-
-
-
-
-	    $(document).ready(function () {	    
-
-			//$(".myAmbientTemperature").text("Hello Word");
-
-			//This event fires immediately when the close instance method is called.
-
-			
-
-	
-		// var alertHuman;
-		// var alertHumanisTriggered = false;
-
-		// socket.on('stoveON', function(msg) {	
-		// 	console.log(msg.message);
-		// 	if(!isTriggered){
-		// 		console.log("sending reminder")
-		// 		alertHuman = setTimeout(function(){ 
-		// 			alert("Hello"); 
-		// 		}, 10000);	
-		// 		alertHumanisTriggered = true;	
-		// 	}	
-		// });	
-
-		// socket.on('humanBack', function(msg) {
-		// 	console.log(msg.message);
-		// 	clearTimeout(alertHuman);
-		// });	
-	
-		// socket.on('stoveOFF', function(msg) {
-		// 	console.log(msg.message);
-		// 	clearTimeout(alertHuman);	
-		// });	
-
-
-
+	    $(document).ready(function () {	    	//when page loades, run this function
 			     	     
 	        const config = {
 	            type: 'line',
 	            data: {
 	                labels: [],
-	                datasets: [{
-	                    label: "ds18b20",
-	                    backgroundColor: 'rgb(255, 99, 132)',
-	                    borderColor: 'rgb(255, 99, 132)',
-	                    data: [],
-	                    fill: false,
-	                }, {
+	                datasets: [ {
 	                    label: "mlx_ambient",
 	                    backgroundColor: 'rgb(97, 171, 64)',
 	                    borderColor: 'rgb(97, 171, 64)',
@@ -353,13 +174,7 @@
 	                    borderColor: 'rgb(0, 168, 255)',
 	                    data: [],
 	                    fill: false,
-					},{
-	                    label: "mlx_object_avg",
-	                    backgroundColor: 'rgb(159, 51, 255)',
-	                    borderColor: 'rgb(159, 51, 255)',
-	                    data: [],
-	                    fill: false,
-	                }],
+					}],
 	            },
 	            options: {
 	                responsive: true,
@@ -393,315 +208,91 @@
 	                }
 	            }
 	        };
-	            
+			
+			//draw graph
+			//original author: https://ron.sh/creating-real-time-charts-with-flask/
 	        const context = document.getElementById('canvas').getContext('2d');
 			const lineChart = new Chart(context, config);
-			
 
-			
-			//declare variable
-			//var temperature = null;
-			//var average = null;
-
-			//insert data from JSON to global variables				
-			var timestamp;
-			var ds18b20;
-			var mlx_ambient;
-			var mlx_object;
-			var mlx_object_avg;
-
-			var human_presence;
-
-		
 	
-
-	                            
-	        //var jsonurl = "/data";
-	        function fetchData(data, date){    //this function will run 3 sec, with setInterval
-	            //$.getJSON('/data', function (data) {   
-					//console.log(data);
-
-					//console.log(data.mlx_ambient);	
-					//console.log(data.mlx_object);	
-					//console.log(date);	
-
-					// for (var i = 0; i < data.length; i++) {
-					// 	console.log(data[i].mlx_ambient);						//[0] is the 1st patient, [1]=2nd, and so on
-					// 	console.log(data[i].mlx_object);
-					// 	console.log(data[i].timestamp);			
-					// 	//console.log(data[i].Timestamp);
-					// }
-					
-					// //declare var for easy usage
-					// timestamp = data.c[0][0];
-					// ds18b20 = data.c[0][1];
-					// mlx_ambient = data.c[0][2];
-					// mlx_object = data.c[0][3];					
-					// mlx_object_avg = data.d[0][0].toFixed(2);
-					// //human_presence = data.e[0][0].toString();
-
-						//declare var for easy usage
+			
+		
+	        //core function of the system            
+	        function fetchData(data, date){    //this function will whenever there is new data from firestore snapshot/listener
+	      
+					//declare var for easy usage
 					timestamp = date;
 					mlx_ambient = data.mlx_ambient;
 					mlx_object = data.mlx_object;	
 
 					$(".myText-AmbientTemperature").text(data.mlx_ambient);
-					$(".myText-StoveTemperature").text(data.mlx_object);
+					$(".myText-StoveTemperature").text(data.mlx_object);					
 
-	
-							//data.motion_detected;
-
-					//console.log(data.motion_detected);
-
-	
-					
-		
-
-					if (mlx_object - mlx_ambient >= 2){
-
-						//$('#myId').show();   //show danger alert 
-						console.log("stoveON")
+					//stoveON(), if stove is ON, startTimer
+					if (mlx_object - mlx_ambient >= 5){						
+						//console.log("stoveON")
 						$(".myText-StoveStatus").text("ON");
 						
-
-
-						if(!isRunning){
-							startTimer(30, display)
+						if(isTimerRunning == false){	//will only trigger the timer once
+							startTimer(60*1)
+							console.log("stoveON...starting timer countdown...")
 						}
-
-					
-
-						//start timer 		
-						
-					//display = document.querySelector('#time');
-
-					//setInterval(varToStopTimer);
-
-
-			}
-
-
-						
-					
-
-					//if human back, reset timer, alreadt set in document function
-
-					if (mlx_object - mlx_ambient < 1){
-						console.log("stoveOFF")
+					}
+									
+					//stoveOFF(), if stove is OFF, stopTimer
+					if (mlx_object - mlx_ambient <= 4){
+						console.log("stoveOFF, stopping timer countdown...")
 						$(".myText-StoveStatus").text("OFF");
-						//OFF timer
-						//clear interval
+						//OFF timer						
 						clearInterval(varToStopTimer);
-						isRunning = false;
+						isTimerRunning = false;		
 					}
 
-
-
-
-					
-
-
-
-
-					//console.log("human motion"+ human.motion_detected);
-
-					//if (human_motion)
-
-
-					
-
-
-
-
-
-					
-
-					
-
-					//force update data
-					//if (temperature == null){
-					//	temperature = mlx_object;
-					//	average = mlx_object_avg;
-					//}
-			
-	              // for (var i=0; i < data.length; i++){                
-	                //shift the old data to make the graph nicer
-	                if (config.data.labels.length === 60) {    
+	                //shift the old data to the left, make the graph visualisation nicer, not so compact
+	                if (config.data.labels.length === 20) {    
 	                    config.data.labels.shift();
 	                    config.data.datasets[0].data.shift();
-	                    config.data.datasets[1].data.shift();
-						config.data.datasets[2].data.shift();
-						config.data.datasets[3].data.shift();
+	                    config.data.datasets[1].data.shift();	
 					}
 					
 	                //insert data to graph   
-	                config.data.labels.push(timestamp); 
-	                config.data.datasets[0].data.push(ds18b20); 			
-	                config.data.datasets[1].data.push(mlx_ambient); 
-					config.data.datasets[2].data.push(mlx_object); 
-					config.data.datasets[3].data.push(mlx_object_avg); 
+	                config.data.labels.push(timestamp); 	    
+	                config.data.datasets[0].data.push(mlx_ambient); 
+					config.data.datasets[1].data.push(mlx_object); 
 	                lineChart.update();
-	
-					// //update current value on web
-					// document.getElementById("timestamp").textContent = timestamp;  
-	                // document.getElementById("ds18b20").textContent = ds18b20;
-	                // document.getElementById("mlx_ambient").textContent = mlx_ambient;
-					// document.getElementById("mlx_object").textContent = mlx_object; 
-					// document.getElementById("mlx_object_avg").textContent = mlx_object_avg;		
-					// document.getElementById("humanPresence").textContent = human_presence;			
 
-				   //}//end of for loop()  				  
-				  //dataProcessing();	
-
-				  
-				   
-					
-				   
-				
-	            //}); //end of $.getJSON()
 			 }//end of fetchdata()
+
+	
 			 
 			 db.collection("heat_sensor").orderBy("timestamp", "desc").limit(1)
 				.onSnapshot(function(snapshot) {
 				snapshot.docChanges().forEach(function(change) {
 					if (change.type === "added") {
-						//console.log("New city: ", change.doc.data());
-						//console.log(change.doc.data())
-						var timestampDate = change.doc.data().timestamp.toDate();
-						//console.log(timestampDate);		
-						fetchData(change.doc.data(), timestampDate);						
-					} 
-					// if (change.type === "modified") {
-					//     console.log("Modified city: ", change.doc.data());
-					// }
-					// if (change.type === "removed") {
-					//     console.log("Removed city: ", change.doc.data());
-					// }
-				
-			});
-
-		});
+						var timestampDate = change.doc.data().timestamp.toDate();		//convert Firebase time to readable date and time		
+						fetchData(change.doc.data(), timestampDate);					//call fetchData when there is new data		
+					} 	
+			}); //end of .docChanges
+		}); //end of .onSnapshot
 	
 
+			//human_motion firestore listener, it will return data when there is new data uploaded
 			db.collection("human_motion").orderBy("timestamp", "desc").limit(1)
 				.onSnapshot(function(snapshot) {
 				snapshot.docChanges().forEach(function(change) {
-					if (change.type === "added") {
-						//console.log("New city: ", change.doc.data());
-						//console.log(change.doc.data())
-						//console.log(change.doc.data().motion_detected);
-						//var timestampDate = change.doc.data().timestamp.toDate();
-						//console.log(timestampDate);		
-						//fetchData(change.doc.data(), timestampDate);
-						//fetchData(change.doc.data());
-						console.log("detected");
-						$(".myText-HumanMotion").text("Detected");
-						
-						setTimeout(function(){
+					if (change.type === "added") {						
+						console.log("human detected, reseting timer");
+						$(".myText-HumanMotion").text("Detected");	 			//update bootstrap card			
+						setTimeout(function(){									//Change text to "-" to resset the card value
 							$(".myText-HumanMotion").text("-");
-
 						},3000);
-						//$(".myText-HumanMotion").text("Not Detected");
+						//$(".myText-HumanMotion").text("Not Detected");  //this is not possible as the text will stay there forver until new text value overwrite the old text
+						resetTimer();	//reset the timer when human is back																	
+					}									
+				}); //end of .docChanges
+			}); //end of .onSnapshot
 
-						resetTimer();
-						//clearInterval(test);
-						
-						
-					}
-
-				
-					// if (change.type === "modified") {
-					//     console.log("Modified city: ", change.doc.data());
-					// }
-					// if (change.type === "removed") {
-					//     console.log("Removed city: ", change.doc.data());
-					// }
-				});
-			});
-
-
-
-			
-			 //loop to get new data
-	        $(document).ready(function(){
-
-				// $("#myId").on('closed.bs.alert', function(){
-				// alert("Alert message box has been closed.");
-
-
-
-			});
-					   
-
- 
-
-			var last_value = null;		
-			var last_value2 = null;	
-			var arr = [];
-			var human_presence_array = [];
-			var counterStoveOff = 0;	
-			var counterStoveOn = 0;		
-
-			//core of the system
-			function dataProcessing(input){
-
-				var something;
-
-				function alert(){
-					alert("Hello")
-				}
-
-				if (input == "humanBack"){
-					console.log("humanisback");					
-				}
-
-				if (input == "stoveON"){
-					console.log("stoveON");
-
-					var something = (function() {
-						var executed = false;
-						return function() {
-							if (!executed) {
-								executed = true;
-								// do something
-								Console.log("this function only run once");
-								//something = setTimeout(function(){ alert("Hello"); }, 3000);
-								}
-							};
-					})();
-
-					something(); // "do something" happens
-					//something(); // nothing happens			
-				}
-
-				if (input == "stoveOFF"){
-					console.log("stoveOFF");
-					//clearTimeout(something);
-					something();
-				}
-
-				if (input == "stoveON" && input == "huamanBack"){
-					console.log("reset counter");
-					//clearTimeout(something);
-					something();
-				}
-
-				
-					
-				
-			
-			} //end of dataProcess   
-
-			
-
-	    }); //end of ready()
-
-
+		}); //end of ready()
 		
-
-
 	</script>
-
-
-
 	</html>
